@@ -34,6 +34,15 @@ class ClipboardSyncService : Service(), WebSocketHandler.WebSocketEvents {
         webSocketHandler.connect()
     }
 
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        if (intent?.action == "STOP_SERVICE") {
+            stopForeground(true)
+            stopSelf()
+            return START_NOT_STICKY
+        }
+        return START_STICKY
+    }
+
     override fun onTextMessageReceived(receivedText: String) {
         if (receivedText != lastReceivedText && receivedText != lastSentText) {
             lastReceivedText = receivedText
